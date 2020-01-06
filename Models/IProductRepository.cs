@@ -9,5 +9,7 @@ namespace ShopMVC.Models
     {
         IQueryable<Product> Products { get; }
         void SaveOrder(Order order);
+        void SaveProduct(Product product);
+        Product DeleteProduct(int productId);
     }
 }

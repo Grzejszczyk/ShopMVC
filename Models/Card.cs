@@ -31,12 +31,11 @@ namespace ShopMVC.Models
         public virtual decimal ComputeTotalValue() => lineCollection.Sum(e => e.Product.Price * e.Quantity);
         public virtual void Clear() => lineCollection.Clear();
         public virtual IEnumerable<CardLine> Lines => lineCollection;
-
+    }
         public class CardLine
         {
             public int CardLineID { get; set; }
             public Product Product { get; set; }
             public int Quantity { get; set; }
         }
-    }
 }
