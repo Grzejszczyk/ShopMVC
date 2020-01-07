@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ShopMVC.Models;
 using System;
 using System.Collections.Generic;
@@ -16,8 +17,10 @@ namespace ShopMVC.Controllers
             repository = repoService;
             card = cartService;
         }
+        [Authorize]
         public ViewResult List() => View(repository.Orders.Where(o => !o.Shipped));
         [HttpPost]
+        [Authorize]
         public IActionResult MarkShipped(int orderID)
         {
             Order order = repository.Orders.FirstOrDefault(o => o.OrderID == orderID);

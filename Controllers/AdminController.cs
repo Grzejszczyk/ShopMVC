@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ShopMVC.Models;
 using System;
 using System.Collections.Generic;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace ShopMVC.Controllers
 {
+    //[Authorize]
     public class AdminController : Controller
     {
         private IProductRepository repository;
@@ -14,6 +16,7 @@ namespace ShopMVC.Controllers
         {
             repository = repo;
         }
+        [Authorize]
         public ViewResult Index() => View(repository.Products);
         public ViewResult Edit(int productId) => View(repository.Products.FirstOrDefault(p => p.ProductId == productId));
         [HttpPost]

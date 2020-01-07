@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,6 +28,10 @@ namespace ShopMVC
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ShopDbContext>(options => options.UseSqlServer(Configuration["Data:ShopMVC:ConnectionString"]));
+            services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(Configuration["Data:ShopMVCIdentity:ConnectionString"]));
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<AppIdentityDbContext>()
+                .AddDefaultTokenProviders();
             services.AddTransient<IProductRepository, EFProductRepository>();
             services.AddScoped<Card>(sp => SessionCard.GetCard(sp));
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -54,9 +59,9 @@ namespace ShopMVC
 
             app.UseRouting();
 
-            app.UseAuthorization();
-
+            //app.UseAuthentication();
             app.UseSession();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
@@ -89,6 +94,7 @@ namespace ShopMVC
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
             SeedData.EnsurePopulated(app);
+            IdentitySeedData.EnsurePopulated(app);
         }
     }
 }
