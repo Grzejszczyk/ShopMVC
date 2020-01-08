@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ShopMVC.Controllers
 {
-    //[Authorize]
+    [Authorize]
     public class AdminController : Controller
     {
         private IProductRepository repository;

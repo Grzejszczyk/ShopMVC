@@ -9,13 +9,12 @@ using System.Threading.Tasks;
 
 namespace ShopMVC.Controllers
 {
-    //[Authorize]
+    [Authorize]
     public class AccountController : Controller
     {
         private UserManager<IdentityUser> userManager;
         private SignInManager<IdentityUser> signInManager;
-        public AccountController(UserManager<IdentityUser> userMgr,
-        SignInManager<IdentityUser> signInMgr)
+        public AccountController(UserManager<IdentityUser> userMgr,SignInManager<IdentityUser> signInMgr)
         {
             userManager = userMgr;
             signInManager = signInMgr;
@@ -23,12 +22,13 @@ namespace ShopMVC.Controllers
         [AllowAnonymous]
         public ViewResult Login(string returnUrl)
         {
-            return View(new LoginModel { ReturnUrl = returnUrl });
+            ViewBag.ReturnUrl = returnUrl;
+            return View();
         }
         [AllowAnonymous]
-        //[ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken]
         [HttpPost]
-        public async Task<IActionResult> Login(LoginModel loginModel)
+        public async Task<IActionResult> Login(LoginModel loginModel, string returnUrl)
         {
             if (ModelState.IsValid)
             {

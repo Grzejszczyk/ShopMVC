@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ShopMVC.Models;
+using ShopMVC.Migrations;
 
 namespace ShopMVC
 {
@@ -29,9 +30,11 @@ namespace ShopMVC
         {
             services.AddDbContext<ShopDbContext>(options => options.UseSqlServer(Configuration["Data:ShopMVC:ConnectionString"]));
             services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(Configuration["Data:ShopMVCIdentity:ConnectionString"]));
-            services.AddIdentity<IdentityUser, IdentityRole>()
-                .AddEntityFrameworkStores<AppIdentityDbContext>()
-                .AddDefaultTokenProviders();
+            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddEntityFrameworkStores<AppIdentityDbContext>();
+            //services.AddIdentity<IdentityUser, IdentityRole>()
+            //.AddEntityFrameworkStores<AppIdentityDbContext>()
+            //.AddDefaultTokenProviders();
             services.AddTransient<IProductRepository, EFProductRepository>();
             services.AddScoped<Card>(sp => SessionCard.GetCard(sp));
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -59,10 +62,10 @@ namespace ShopMVC
 
             app.UseRouting();
 
-            //app.UseAuthentication();
-            app.UseSession();
+            app.UseAuthentication();
             app.UseAuthorization();
 
+            app.UseSession();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
@@ -92,9 +95,10 @@ namespace ShopMVC
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapRazorPages();
             });
-            SeedData.EnsurePopulated(app);
-            IdentitySeedData.EnsurePopulated(app);
+            //SeedData.EnsurePopulated(app);
+            //IdentitySeedData.EnsurePopulated(app);
         }
     }
 }
