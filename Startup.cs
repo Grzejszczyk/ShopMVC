@@ -97,7 +97,7 @@ namespace ShopMVC
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
-            //SeedData.EnsurePopulated(app);
+            SeedData.EnsurePopulated(app);
             //IdentitySeedData.EnsurePopulated(app);
         }
     }
